@@ -3,7 +3,11 @@ package oblig.repositories;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+
 import oblig.model.Item;
+import oblig.repositories.ItemDAO;
 
 /**
  * Implementation of a Item DAO.
@@ -11,6 +15,8 @@ import oblig.model.Item;
  * @author Lars-Petter Helland
  * @author Atle Geitung
  */
+
+@Service
 public final class ItemDAOMemorySingleton implements ItemDAO {
 
     private final List<Item> items = new ArrayList<>();
