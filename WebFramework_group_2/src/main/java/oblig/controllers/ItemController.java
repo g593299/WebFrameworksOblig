@@ -27,7 +27,7 @@ public class ItemController {
 	public ResponseEntity<List<Item>> getAllItems(){
 		//return repo.findAllItems();
 		try {
-			List<Item> l = repo.findAllItems();
+			List<Item> l = repo.getInstance().findAllItems();
 			return new ResponseEntity<List<Item>>(l,HttpStatus.OK);
 			
 		} catch (Exception e) {
@@ -39,7 +39,7 @@ public class ItemController {
 	public ResponseEntity<Item> addItem(@RequestBody Item item) {
 		
 		try {
-			repo.createItem(item);
+			repo.getInstance().createItem(item);
 			return ResponseEntity.ok(item);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
@@ -51,11 +51,11 @@ public class ItemController {
 	public ResponseEntity<Item> getItem( @PathVariable("id") String id){
 		
 		try {
-			Item item = repo.findItem(id);
+			Item item = repo.getInstance().findItem(id);
 			return new ResponseEntity<>(item, HttpStatus.OK);
 			
 		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 		
 	}
@@ -64,7 +64,7 @@ public class ItemController {
 	public ResponseEntity<Item> updateItem( @PathVariable("id") String id, @RequestBody Item item){
 		
 		try {
-			repo.updateItem(id, item);
+			repo.getInstance().updateItem(id, item);
 			return new ResponseEntity<>(item, HttpStatus.OK);
 			
 		} catch (Exception e) {
@@ -75,7 +75,7 @@ public class ItemController {
 	@DeleteMapping("/item/{id}")
 	public ResponseEntity<Item> deleteItem( @PathVariable("id") String id){
 		try {
-			repo.deleteItem(id);
+			repo.getInstance().deleteItem(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
