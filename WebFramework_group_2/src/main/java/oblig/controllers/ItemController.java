@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import oblig.model.Item;
@@ -26,13 +28,16 @@ public class ItemController {
 	@GetMapping("/items")
 	public ResponseEntity<List<Item>> getAllItems(){
 		//return repo.findAllItems();
+		List<Item> list = null;
+		
 		try {
-			List<Item> l = repo.getInstance().findAllItems();
-			return new ResponseEntity<List<Item>>(l,HttpStatus.OK);
+			list = repo.getInstance().findAllItems();
 			
 		} catch (Exception e) {
 			return ResponseEntity.notFound().build();
 		}
+		return new ResponseEntity<List<Item>>(list,HttpStatus.OK);
+		
 	}
 	
 	@PostMapping("/items")
@@ -40,46 +45,57 @@ public class ItemController {
 		
 		try {
 			repo.getInstance().createItem(item);
-			return ResponseEntity.ok(item);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
+		return ResponseEntity.ok(item);
 		
 	}
 	
 	@GetMapping("/items/{id}")
 	public ResponseEntity<Item> getItem( @PathVariable("id") String id){
+		Item item = null;
 		
 		try {
-			Item item = repo.getInstance().findItem(id);
-			return new ResponseEntity<>(item, HttpStatus.OK);
+			item = repo.getInstance().findItem(id);
+			if(item == null) {
+				return new ResponseEntity<>(new Item(), HttpStatus.NOT_FOUND);
+			}
 			
 		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(new Item(), HttpStatus.NOT_FOUND);
 		}
+		
+		return new ResponseEntity<>(item, HttpStatus.OK);
 		
 	}
 	
-	@PutMapping("/item/{id}")
+	@RequestMapping(value="/items/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Item> updateItem( @PathVariable("id") String id, @RequestBody Item item){
 		
 		try {
-			repo.getInstance().updateItem(id, item);
-			return new ResponseEntity<>(item, HttpStatus.OK);
+			Item i = repo.getInstance().findItem(id);
+			repo.getInstance().updateItem(i.getId(), item);
 			
-		} catch (Exception e) {
+		} catch (Exception e) {			
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		
+		return new ResponseEntity<>(item, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/item/{id}")
-	public ResponseEntity<Item> deleteItem( @PathVariable("id") String id){
+	@RequestMapping(value="/items/{id}", method=RequestMethod.DELETE)
+	public ResponseEntity<?> deleteItem( @PathVariable("id") String id){
+		
 		try {
-			repo.getInstance().deleteItem(id);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			Item i = repo.getInstance().findItem(id);
+			repo.getInstance().deleteItem(i.getId());
+			
+			return ResponseEntity.noContent().build();
+		} catch (Exception e) {			
+			return ResponseEntity.notFound().build();
 		}
+		
 	}
 
 	
