@@ -21,6 +21,8 @@ public interface ItemDAO {
         createItem(new Item("9992", "Item02", 2D, "Item02 Description"));
         createItem(new Item("9993", "Item03", 3D, "Item03 Description"));
     }
+    
+    void deleteItem(String id);
 
     /**
      * Find all Items.

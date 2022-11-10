@@ -44,6 +44,12 @@ public final class ItemDAOMemorySingleton implements ItemDAO {
         }
         return instance;
     }
+    
+    @Override
+    public void deleteItem(String id) {
+    	final int index = items.indexOf(new Item(id));
+    	items.remove(index);
+    }
 
     @Override
     public List<Item> findAllItems() {
