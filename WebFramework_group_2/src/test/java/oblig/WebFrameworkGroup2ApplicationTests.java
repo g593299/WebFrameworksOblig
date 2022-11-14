@@ -3,6 +3,8 @@ package oblig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import oblig.model.Item;
+import oblig.repositories.ItemDAOMemorySingleton;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class WebFrameworkGroup2ApplicationTests {
@@ -22,9 +25,21 @@ class WebFrameworkGroup2ApplicationTests {
 	@Autowired
 	TestRestTemplate template;
 	
+	@Autowired
+	ItemDAOMemorySingleton repo;
+	
+	
 	@Test
 	public void checkIf3Items() throws Exception {
 	 //TODO
+		
+	List<Item> list = null;
+		
+	list = repo.getInstance().findAllItems();
+	
+	assertEquals(3, list.size());
+		
+		
 	}
 	
 	@Test
@@ -32,22 +47,22 @@ class WebFrameworkGroup2ApplicationTests {
 		
 		//TODO
 		
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.APPLICATION_JSON);
-//		
-//		HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
-//		
-//		Item i = new Item();
-//		i.setId("10100");
-//		i.setName("Test");
-//		i.setPrice(1.0);
-//		i.setDescription("Testing");
-//		
-//		String url = "/items/" + i.getId();
-//		HttpEntity<Item> requestUpdate = new HttpEntity<>(i, headers);
-//		ResponseEntity<Item> response = template.exchange(url, HttpMethod.GET, requestUpdate, Item.class);
-//	
-//		assertEquals(expectedStatus, response.getStatusCode());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpStatus expectedStatus = HttpStatus.NOT_FOUND;
+		
+		Item i = new Item();
+		i.setId("10100");
+		i.setName("Test");
+		i.setPrice(1.0);
+		i.setDescription("Testing");
+		
+		String url = "/items/" + i.getId();
+		HttpEntity<Item> requestUpdate = new HttpEntity<>(i, headers);
+		ResponseEntity<Item> response = template.exchange(url, HttpMethod.GET, requestUpdate, Item.class);
+	
+		assertEquals(expectedStatus, response.getStatusCode());
 
 		
 	}
